@@ -47,10 +47,13 @@
 
 \pretitle{\begin{center}\Huge\bfseries} % Article title formatting
 	\posttitle{\end{center}} % Article title closing formatting
-\title{Article Title} % Article title
+\title{Content-based recommendations in~e-commerce services} % Article title
 \author{%
-	\textsc{ŁJohn Smith}\thanks{A thank you or further information} \\[1ex] % Your name
-	\normalsize University of California \\ % Your institution
+	\textsc{John Smith}\thanks{A thank you or further information} \\[1ex] % Your name
+	\normalsize Warsaw University of Technology \\ % Your institution
+	\normalsize Faculty of Mathematics and Information Science \\
+	\normalsize ul. Koszykowa 75 \\
+	\normalsize 00-662 Warsaw, Poland \\
 	\normalsize \href{mailto:john@smith.com}{john@smith.com} % Your email address
 	%\and % Uncomment if 2 authors are required, duplicate these 4 lines if more
 	%\textsc{Jane Smith}\thanks{Corresponding author} \\[1ex] % Second author's name
@@ -60,8 +63,18 @@
 \date{\today} % Leave empty to omit a date
 \renewcommand{\maketitlehookd}{%
 	\begin{abstract}
-		\noindent \blindtext % Dummy abstract text - replace \blindtext with your abstract text
+		The subject of this paper focuses on issues of determining a semantic similarity between text
+		documents and recommendations of similar documents. A detailed problem comes from the online
+		auction site Allegro, which has a section of articles describing products available on the platform.
+		This section offers a recommendation system for similar textual articles based on their
+		content. The aim of this paper is to investigate a possibility of improving the existing recommendation
+		system using semantic text analysis methods.
+		In this paper, I adapt some state-of-the-art methods for determining a similarity between
+		text documents to the above problem, I introduce measures to evaluate a performance of these
+		methods and analyze possibilities of using them in the real system.
 	\end{abstract}
+	{\bf Keywords:} recommendations, natural language processing, word embedding, semantics, allegro
+	
 }
 
 %----------------------------------------------------------------------------------------
@@ -70,12 +83,19 @@
 	
 	% Print the title
 	\maketitle
-	
-	%----------------------------------------------------------------------------------------
-	%	ARTICLE CONTENTS
-	%----------------------------------------------------------------------------------------
-	
+
 	\section{Introduction}
+	
+	Recommendation systems are often part of web services. 
+	
+	The key issue of recommendations generation is how suggested items are relevant to these which the user is interested in. 
+	
+	We can divide recommendation systems into two groups: collaborative and  content-based filtering. The first one assumes that user is likely to be interested in items which also users similar to s/he were interested in. In this paper we are focusing on the second group in which recommended items are similar to these that the user liked so far.
+	
+	In this paper we strive to check if newly proposed word embeddings methods are able to replace recently used method based on Elasticsearch query.
+	
+	Allegro - the biggest marketplace platform in Eastern Europe contains a section presenting text articles concerning products available vie the platform. Currently there is a list of links to articles similar to given one. 
+	% cel badania - sprawdzić czy można zastąpić używaną do tej pory metodę opartą o zapytanie elasticsearchowe
 	
 	\lettrine[nindent=0em,lines=3]{L} orem ipsum dolor sit amet, consectetur adipiscing elit.
 	\blindtext % Dummy text
@@ -102,7 +122,13 @@
 	
 	%------------------------------------------------
 	
-	\section{Results}
+	\section{Dataset}
+	
+	Given dataset consists of 20000 textual articles concerning different products available via Allegro platform.
+	
+	\section{Results and discussion}
+	
+	% metody ewaluacji i wyniki
 	
 	\begin{table}
 		\caption{Example table}
@@ -130,7 +156,7 @@
 	
 	%------------------------------------------------
 	
-	\section{Discussion}
+	\section{Conclusion}
 	
 	\subsection{Subsection One}
 	
@@ -140,10 +166,6 @@
 	\subsection{Subsection Two}
 	
 	\blindtext % Dummy text
-	
-	%----------------------------------------------------------------------------------------
-	%	REFERENCE LIST
-	%----------------------------------------------------------------------------------------
 	
 	\begin{thebibliography}{99} % Bibliography - this is intentionally simple in this template
 		
