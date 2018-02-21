@@ -1,0 +1,157 @@
+Działanie
+takiego systemu daje zysk zarówno uzytkownikowi, pozwalajac mu dotrzec do informacji, której
+mógłby samodzielnie nie odszukac, albo wrecz nie wiedziec, iz taka informacja istnieje, jak i włascicielowi
+serwisu internetowego, któremu zalezy, by przyciagnac do siebie uzytkowników, aby ci
+w jak najwiekszym stopniu korzystali z jego usług.
+13
+
+
+Celem niniejszej pracy jest zbadanie metod sugerujacych uzytkownikowi artykuły podobne
+do aktualnie odwiedzanego, co wprost wiaze sie z metodami uzywanymi w technice filtrowania
+opartego na tresci.
+
+Celem systemu jest ograniczenie czasu poswiecanego
+przez uzytkownika na samodzielnym przeszukiwaniu systemu
+
+Metoda
+generowania rekomendacji obecnie wykorzystywana w serwisie opiera sie własnie o zapytanie
+do usługi Elasticsearch wykorzystujace słowa kluczowe manualnie dołaczone do artykułów.
+
+
+Od 2013r., wraz z wprowadzeniem przez T. Mikolova metody Word2vec [19] nastapił gwałtowny
+rozwój i niewatpliwy sukces metod typu word embeddings. Okreslenie word embeddings
+oznacza osadzanie słów w przestrzeni wektorowej przy pomocy uczenia nienadzorowanego i zostało
+po raz pierwszy uzyte 2003r. w pracy Y. Bengio [2], gdzie wektory słów generowane sa
+przez głeboka siec neuronowa. Ogół technik zaliczanych obecnie do word embeddings cechuje sie
+dazeniem do reprezentacji słów wraz z zaleznosciami pomiedzy nimi w postaci wektorów o stosunkowo
+niskiej wymiarowosci.
+
+
+szereg nowych możliwości a number of new opportunities
+
+Roughly speaking, 
+
+To solve this problem, we need to capture the semantic meaning of words, meaning we need to understand that words like ‘good’ and ‘positive’ are closer than ‘apricot’ and ‘continent.’ The tool we will use to help us capture meaning is called Word2Vec.
+
+Word2Vec is a technique to find continuous embeddings for words. It learns from reading massive amounts of text and memorizing which words tend to appear in similar contexts. After being trained on enough data, it generates a 300-dimension vector for each word in a vocabulary, with words of similar meaning being closer to each other.
+
+
+Spójnosc danych oceniam na wysoka, tj. kazde pole zawarte w strukturze dokumentu jest
+zawsze wypełnione — brak jest wartosci typu NULL.
+
+Do kazdego artykułu dołaczona jest lista słów kluczowych. Sa to wyrazenia złozone z jednego
+lub kilku słów, które maja za zadanie scharakteryzowac w skrócie jego zawartosc
+Pole to jest wykorzystywane w dotychczasowym mechanizmie
+generowania rekomendacji — artykuły podobne do danego sa wyszukiwane na podstawie
+jego słów kluczowych. Przygladajac sie wszystkim słowom kluczowym zestawionym razem,
+zauwazyłem pewne niespójnosci: czesc słów kluczowych o tej samej tresci pisana jest w inny
+sposób, np. rózna wielkoscia liter, czy uzywajac myslnika zamiast spacji. Wynika to zapewne z
+faktu przypisywania słów kluczowych samodzielnie przez autorów w oderwaniu od słów przypisanych
+do reszty artykułów.
+
+
+
+
+
+Nizej opisuje kolejne kroki wstepnego przetwarzania tekstu, które wykonuje na posiadanym
+zbiorze artykułów.
+1. Oczyszczanie tekstu ze zbednych, wspomnianych wczesniej znaczników. Z punktu widzenia
+semantycznej analizy tekstu sa one bezuzyteczne, czy wrecz szkodliwe (powoduja pewne
+„zanieczyszczenie” tekstu). Stad usuwam je wykorzystujac odpowiednio skonstruowane
+wyrazenia regularne. Przykładem takiego znacznika jest ![2_new.jpg](http://(...)
+’2_new.jpg’) umieszczajacy obrazek w srodku tekstu (tresc adresu URL usunałem przyczyn
+poufnosci).
+2. Usuniecie słów stopu (stopwords) — na ogół krótkich słów niewnoszacych nic do znaczenia
+całosci artykułu. Sa to np. „w”, „z”, „poniewaz”. Ich usuniecie zmniejsza liczbe słów
+dokumentu skracajac tym samym czas jego przetwarzania. Jako, ze słowa te wystepuja
+czesto, usuniecie ich daje mozliwosc uwypuklenia znaczenia innych słów majacych wpływ
+na rzeczywiste znaczenie całego artykułu. Zbiór słów stopu czerpie z [31].
+3. Sprowadzenie wszystkich słów dokumentu do małych liter. Pomaga to ujednolicic postac
+czesci słów o tym samym znaczeniu, wsród których jedno wystepuje na poczatku zdania,
+a inne w srodku.
+4. Rozbicie słów połaczonych myslnikiem. Doswiadczenie w pózniejszym etapie (tokenizacji)
+pokazuje, ze narzedzie jej dokonujace (Morfologik [20]) nie radzi sobie z tego typu słowami i zostawia je w niezmienionej postaci gramatycznej (np. „biało-czerwonego”). Stad koniecznosc
+recznego wykonania przeze mnie mechanizmu rozbijajacego takie słowa do postaci
+kompatybilnej z tokenizerem. Do wykonania odpowiedniej funkcji potrzebna była wczesniejsza
+analiza tego typu słów pod katem zachowania obu członów w zaleznosci od ich
+rodzaju, przypadku i wystepowania konkretnych liter w sufiksach słów składowych. Zalezało
+mi takze, aby nie rozbijac słów bedacych nazwami własnymi, czy symbolami urzadzen.
+5. Tokenizacja. Jest to najistotniejszy element całego procesu. Polega na sprowadzaniu słów
+o tym samym znaczeniu, a róznej formie gramatycznej do tej samej postaci. Sporym utrudnieniem
+jest tutaj stopien skomplikowania jezyka polskiego oraz liczba wyjatków, jaka ten
+jezyk posiada. Za przykład moze posłuzyc słowo „miec”, którego jedna z form to „ma”,
+kolejna to „miej”. Celem etapu jest sprowadzenie kazdego z tych wyrazów do formy podstawowej
+„miec”. Do przeprowadzenia tej operacji stosuje narzedzie Morfologik [20].
+
+
+
+Powyzsze kroki doprowadzaja dane do stanu, w którym mozna zastosowac techniki semantycznej
+analizy tekstu. Słownik zbudowany na wstepnie przetworzonym korpusie zawiera 98174 unikalnych
+słów, oraz 7409145 wszystkich słów (z powtórzeniami).
+
+
+
+Ponizszy histogram (2.2) pokazuje,
+ze przytłaczajaca wiekszosc słów słownika zbudowanego na korpusie stanowia słowa wystepujace
+rzadko.
+
+
+
+
+W celu porównania stosowanych metod wyznaczania podobienstwa miedzy artykułami konieczna
+jest formalizacja pewnych miar tego podobienstwa.
+
+
+W praktyce rzadko jednak dysponuje sie wartoscia, na ile dany element rankingu
+jest adekwatny do zapytania generujacego ów ranking.
+
+
+
+Wada tej metody jest jej powolnosc i potrzeba zaangazowania dodatkowych osób dokonujacych
+ewaluacji. Niemozliwym wydaje sie przeprowadzenie badania dla wszystkich artykułów, stad
+konieczny jest wybór losowej próby artykułów, które parami poddane zostana ocenie pod katem
+podobienstwa.
+
+
+ocena na podstawie eksperckiej oceny uzytkowników. W badaniu wykorzystałem
+5 uzytkowników operujacych kazdy na tym samym zbiorze par testowych. Pary zostały
+wygenerowane (zgodnie z wczesniejszym opisem metody) na podstawie 50 artykułów bazowych
+wylosowanych sposród wszystkich artykułów udostepnionych mi przez Allegro.
+
+
+Ewaluacja ekspercka wprost pokazuje, ze zadna z testowanych metod nie odbiega znaczaco
+od innych. Zadna z testowanych adaptacji metod semantycznej analizy tekstu nie odbiega równiez
+od dotychczasowej metody uzywanej w Allegro. Róznica pomiedzy najlepsza metoda (FastText)
+i najgorsza (LDA) wynosi ok. 9%. Kazda z testowanych metod dała równiez wynik znaczaco
+lepszy od metody losowej.
+
+
+W swietle powyzszych wyników najlepsze rezultaty osiaga FastText. Zakładam, iz jest to
+zwiazane z wewnetrzna analiza słów, jaka wykonuje ta metoda. Moze sie to sprawdzac szczególnie
+dobrze w przypadku jezyka polskiego, który jest jezykiem bogatym morfosyntaktycznie.
+Aby odpowiedziec na pytanie postawione na poczatku niniejszej pracy, tj. czy metody semantycznej
+analizy jezyka naturalnego zaadaptowane w celu wyznaczania rekomendacji sa w stanie
+dorównac jakoscia dotychczasowej metodzie stosowanej w Allegro, wykonuje test, który ma
+na celu sprawdzenie, czy sa podstawy, by sadzic, ze wyniki którejkolwiek z metod poddanych
+ocenie eksperckiej odstaja w sposób istotny statystycznie od reszty przetestowanych metod.
+Test statystyczny, jaki przeprowadzam, to test Kruskala-Wallisa. Za hipoteze zerowa H0 przyjmuje
+on równosc dystrybuant rozkładów w populacjach, z których pochodza próby.
+We wczesniejszych testach uzytkownicy oceniali podobienstwo pomiedzy artykułem, a kazdym
+z artykułów do niego rekomendowanych, wyznaczonych ewaluowanymi metodami. Za dane
+wejsciowe testu Kruskala-Wallisa przyjmuje próby odpowiadajace wynikom testów dla kazdej
+z metod (prócz metody losowej) złozone ze sredniej oceny uzytkowników dla najbardziej relewantnej
+rekomendacji do kazdego z testowanych artykułów bazowych.
+W tescie przyjmuje poziom istotnosci  = 0.05. Ostatecznie, jako wynik testu Kruskala-
+Wallisa otrzymuje p = 0.0571 > , na podstawie czego stwierdzam, ze brak jest przesłanek, by
+odrzucic hipoteze zerowa — róznica miedzy jakoscia rekomendacji testowanych metod nie jest istotna statystycznie. Oznacza to, ze ani zadna z testowanych metod semantycznych nie odstaje
+od innych, ani tez dotychczasowa metoda Allegro nie jest istotnie lepsza/gorsza od innych
+testowanych metod.
+
+
+Porównanie najlepszych konfiguracji testowanych metod wykazało, ze nie ma istotnych róznic
+miedzy metodami semantycznej analizy tekstu zaadaptowanymi do zadania generowania rekomendacji
+oraz dotychczasowa metoda stosowana w Allegro oparta o zapytanie do silnika Elasticsearch.
+57
+
+
+can be leveraged to:   można wykorzystać do
