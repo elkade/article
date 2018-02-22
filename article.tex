@@ -82,7 +82,7 @@
 	
 	% Print the title
 	\maketitle
-
+	%INTRODUCTION---------------------------------------------------------------------------------------------------------------------------------------
 	\section{Introduction}
 
 	%TODO napisać, że to ważne
@@ -109,58 +109,32 @@
 	
 	%Plan artykułu
 	In the following sections we describe topics in detail...
-	%------------------------------------------------
-	
+	%DATASET------------------------------------------------------------------------------------------------------------------------------------
 	\section{Dataset}
 	%TODO Skąd pochodzi zbiór danych
 	
-	Given dataset consists of 20000 text articles describing several categories of products available via Allegro platform. Single record consists of article contents and metadata attached by an author of the article.
+	As mentioned our dataset comes form Allegro e-commerce platform. It consists of 20000 text articles describing several categories of products available via Allegro platform. Single record consists of article contents and metadata attached by an author of the article. As significant metadata we consider ,,category'' and ,,keywords''.
 	
-	Id, category, keywords.
+	%krótko opisać keywords i category
 	
-	All articles are written in Polish. The vocabulary based on the articles set contains many industry-specific words like brands and models names, books titles and technical words.
+	All articles are written in Polish. The vocabulary based on the articles set contains many industry-specific words like brands and models names, books titles and technical words. Moreover raw articles contain some tags responsible for images and hyperlinks present on the website.
 	
-	Moreover raw articles contain some tags responsible for images and hyperlinks present on the website.
-	
-	%TODO Preprocessing
-	
-	
-	\section{Methods}
-
-	\subsection{Preprocessing}
-	
-	The following describes the next steps of the pre-processing of text that he performs on his own
+	A standard activity before building a model is preprocessing of a row dataset. The following enumeration describes steps of the preprocessing that we performed.
 	collection of articles.
 	\begin{enumerate}
-		\item Cleansing the text from the redundant, previously mentioned markers. From the viewpoint of
-	semantic analysis of the text they are useless or harmful (they cause some
-	"Pollution" of the text). So I remove them using properly constructed ones
-	regular expressions. An example of such a tag is! [2\_new.jpg] (http: // (...)
-	'2\_new.jpg') placing the picture in the middle of the text (the content of the URL removed the reasons
-	confidentiality).
-		\item Removal of stopwords - usually short words that do not mean anything
-	the whole article. They are, for example, "in", "from", "because". Removing them reduces the number of words
-	document, thus shortening the processing time. As they say these words
-	often, removing them gives you the opportunity to emphasize the meaning of other words that have an impact
-	on the real meaning of the whole article. The collection of alloy words is derived from [31].
-		\item Bringing all the words of the document to lowercase letters. It helps to unify the character
-	parts of words with the same meaning, among which one occurs at the beginning of the sentence,
-	and others in the middle.
-		\item Breaking down the words connected with the thought. Experience at a later stage (tokenization)
-	shows that the tool making it (Morfologik [20]) does not deal with these types of words and leaves them in the unchanged grammatical form (eg "white and red"). So it is necessary
-	the manual execution of the mechanism by which I break such words into characters
-	compatible with the tokenizer. The earlier one was needed to perform the appropriate function
-	analysis of this type of words for the behavior of the two elements depending on them
-	the type, case and occurrence of specific letters in the suffixes of the component words. depended
-	me not to break down words that are my own names or symbols of devices.
-		\item Tokenization. This is the most important element of the whole process. It's about bringing words
-	with the same meaning, and different grammatical form to the same form. A big hurdle
-	here is the degree of complexity of the Polish language and the number of exceptions that this one has
-	language has. As an example, you can use the word "have", which one of the forms is "has",
-	the next is "have it". The goal of the stage is to bring each of these words to the basic form
-	"have". To carry out this operation, he uses the Morfologik tool [20].
-		\end{enumerate}
+		
+		\item Cleansing the text from the redundant, previously mentioned tags. From the viewpoint of semantic analysis they are useless or even noxious. So I remove them using properly constructed ones
+		regular expressions. An example of such a tag is \texttt{[2\_new.jpg] (http: // (...)'2\_new.jpg')} placing the picture in the middle of the text (the content of the URL removed due to confidentiality reasons).
+		
+		\item Removal of stopwords - usually short words carrying very little information about the actual document contents, e.g. ,,in'', ,,from'', ,,because'' etc. Removing them reduces the number of words in a document and the processing time therein. Full list of stopwords comes from [31].
+		
+		\item Converting all the words of the document to lowercase letters. It helps to unify words with the same meaning, but written using both uppercase and lowercase letters.
+		
+		\item Breaking down the words connected with the hyphen. Experience at a later lemmatisation stage shows that the tool used to it (Morfologik [20]) does not cope with these types of words and leaves them in the unchanged grammatical form. This made it necessary to build our own tool that breaks such words into sub-words compatible with the lemmatiser.
+		
+		\item Tokenization and lemmatisation. This is the most important element of the process. It's about separating text into individual words and converting the words with the same meaning, and different grammatical form to the same form. Complexity of the Polish language and the number of exceptions that this language has are making this problem harder than in many other languages. To carry out this operation, we used the Morfologik tool [20].
 	
+	\end{enumerate}
 	
 	The above steps lead the data to a state in which you can apply semantic techniques
 	text analysis. The dictionary built on the pre-processed body contains 98174 unique
@@ -168,11 +142,31 @@
 	
 	the overwhelming majority of the words of the dictionary built on the body are the words appearing
 	rarely.
+	%METHODS-------------------------------------------------------------------------------------------------------------------------------------
+	\section{Methods}
+
+	Emerging popularity of word embeddings methods started 
+	
+	Next we had to choose an evaluation method....
+
 	\subsection{Model building}
 	
+	Below enumeration contains text analysis methods we decided to adapt for our content-based recommendations task.
+	
+	\begin{enumerate}
+		\item Latent semantic analysis
+		\item Latent Dirichlet allocation
+		\item Word2Vec %We decided to train word embedding models on our dataset.
+		\item GloVe
+		\item FastText
+	\end{enumerate}
 	
 	Word2Vec authors offer pretrained model but only for English language. For Polish it's more difficult...
 	Lack of presumably important words like brand and model names etc.  
+	
+	
+	%Wzmianka o usrednianiu wektorów word embeddings
+	
 	
 	Text requiring further explanation\footnote{Example footnote}.
 	
@@ -189,29 +183,12 @@
 	
 	
 	
-	%------------------------------------------------
-	
+	%RESULTS & DISCUSSION-----------------------------------------------------------------------------------------------------------------------------------------------------------
 	\section{Results and discussion}
+	In order to compare aforementioned methods we performed described expert evaluation. The evaluated methods were: LSA, LDA, word2vec, GloVe, FastText, previous Allegro elasticsearch-based method and randomly chosen pairs of articles.
 	
-	% metody ewaluacji i wyniki
-	
-	%\begin{table}
-	%	\caption{Example table}
-	%	\centering
-	%	\begin{tabular}{llr}
-	%		\toprule
-	%		\multicolumn{2}{c}{Name} \\
-	%		\cmidrule(r){1-2}
-	%		First name & Last Name & Grade \\
-	%		\midrule
-	%		John & Doe & $7.5$ \\
-	%		Richard & Miles & $2$ \\
-	%		\bottomrule
-	%	\end{tabular}
-	%\end{table}
-	
-	%------------------------------------------------
-	
+	Hyperparameters of the methods...
+
 	\begin{figure}
 		\centering
 		\includegraphics[width=0.45\textwidth]{results.png}
@@ -219,98 +196,32 @@
 		%\label{fig:warstwy}
 	\end{figure}
 	
-	Expert evaluation directly shows that none of the tested methods is significantly different
-	from others. None of the tested adaptations of the methods of semantic text analysis does not depart as well
-	from the current method used in Allegro. The difference between the best method (FastText)
-	and the worst (LDA) is around 9%. Each of the tested methods also gave a significant result
-	better than the random method.
+	Expert evaluation suggests that none of the tested methods is significantly different from others. The difference between the best method (FastText) and the worst one (LDA) is around 9\%. Each of the tested methods also gave a significantly better result than the random method.
 	
-	To answer the question posed at the beginning of this work, i.e. whether the semantic method
-	Natural language analysis adapted to determine recommendations are in the state
-	to match the quality of the current method used in Allegro, he performs the test he has
-	to check whether there are grounds to believe that the results of any of the methods subjected
-	expert judgment is detached statistically significantly from the rest of the tested methods.
-	The statistical test that I carry out is the Kruskal-Wallis test. H0 accepts for the null hypothesis
-	he equality of distributions of distributions in the populations from which the samples originated.
-	In earlier tests, users assessed the similarity between the article and everyone
-	from articles recommended for it, determined by evaluated methods. For data
-	Kruskal-Wallis test entry accepts tests corresponding to test results for each
-	from methods (except for the random method) submitted from the average assessment of users for the most relevant
-	recommendations for each of the tested base articles.
-	In the test, the level of significance is assumed? = 0.05. Finally, as a result of the Kruskal test
-	Wallis receives p = 0.0571>? On the basis of which I state that there are no reasons to
-	reject the null hypothesis - the difference between the quality of the recommendations of the tested methods is not
-	56
-	5.5. Test summary
-	statistically significant. It means that neither of the tested semantic methods does not stick out
-	from others, neither the previous Allegro method is significantly better / worse than others
-	tested methods.
+	To answer the question posed at the beginning of this work, i.e. whether the examined text analysis methods adapted to content-based recommendation task are able to match current method used in Allegro, we perform a test that's goal is to check whether there are grounds to believe that the results of any of the methods is statistically significantly different from the rest of the examined methods.
+		
+	The statistical test that we carry out is the Kruskal-Wallis test. The null hypothesis $H_0$ assumes the equality of distributions in the populations from which the samples originated.
+	%do poprawienia---------------------------------------
+	In earlier tests, users assessed the similarity between the article and everyone from articles recommended for it, determined by evaluated methods.
 	
+	For data Kruskal-Wallis test entry accepts tests corresponding to test results for each from methods (except for the random method) submitted from the average assessment of users for the most relevant recommendations for each of the tested base articles.
+	%-----------------------------------------------------
+	In the test, the level of significance is $\alpha = 0.05$. Finally, as the result of the Kruskal-Wallis test we received $p = 0.0571>\alpha$, on the basis of which we state that there are no reasons to	reject the null hypothesis --- the difference between the quality of the recommendations of the tested methods is not statistically significant. It means that neither of the tested semantic methods does not stick out from others, nor the previous Allegro method is significantly better/worse than other tested methods.
 	
+	%CONCLUSION--------------------------------------------------------------------------------------------------------------------------------------------------------------------
 	\section{Conclusion}
 	
+	After analyzing the test results we can answer: yes, each of the examined methods of natural language semantic analysis in their best configuration can be adapted to generate article content-based recommendations. This means we can replace previously used method with e.g. FastText and any user should not feel any difference in recommendations quality.
 	
-	Comparison of the best configurations of the tested methods showed that there are no significant differences
-	between methods of semantic text analysis adapted to the task of generating recommendations
-	and the previous method used in Allegro based on the query for the Elasticsearch engine.
-	
-	
-	After analyzing the test results
-	you can answer: yes, each of the methods of semantic analysis of the natural language in yours
-	the best configuration can be adapted to generate article recommendations
-	based on the content of the article currently displayed by the user of the website. recommendations
-	these in the opinion of users do not undermine the quality of the current method.
-	Using the methods of semantic text analysis allows to capture the hidden similarities between
-	documents, where the documents combine not the same words or synonyms, but some abstract ones
-	concepts related to each other. An important advantage of semantic methods compared to the previous one
-	the method used in Allegro is the fact that they are based only on content
-	articles. This frees the authors of the articles from independently providing them with additional metatags,
-	of which the current method is used to a large extent.
+	Using methods of semantic text analysis allows to capture the hidden similarities between documents, where the documents combine not the same words or synonyms, but some abstract concepts related to each other. An important advantage of semantic methods compared to the previous one is the fact that they are based only on article contents. This frees the authors of the articles from providing additional metadata, which the previous method uses in large extent.
 	
 	
 	\begin{thebibliography}{99}
-		
-		\bibitem[Figueredo and Wolf, 2009]{Figueredo:2009dg}
-		Figueredo, A.~J. and Wolf, P. S.~A. (2009).
-		\newblock Assortative pairing and life history strategy - a cross-cultural
-		study.
-		\newblock {\em Human Nature}, 20:317--330.
-		
-		
-		\bibitem{allegro}
-		Opis Allegro
-		\url{https://magazyn.allegro.pl/3333-serwis-allegro-to-nasz-sposob-na-wasze-szybkie-i-wygodne-zakupy-przez-internet}
-		(dostęp 07.05.2017)
-		
-		\bibitem{bengio}
-		Y. Bengio, R. Ducharme, P. Vincent, C. Jauvin,
-		\emph{A Neural Probabilistic Language Model},
-		Journal of Machine Learning Research 3 1137–1155,
-		2003
-		
 		\bibitem{lda}
 		D. M. Blei, A. Y. Ng, M. I. Jordan,
 		\emph{Latent Dirichlet Allocation},
 		Journal of Machine Learning Research, tom 3 num. 4–5,
 		2003
-		
-		\bibitem{aylien}
-		Blog Aylien
-		\url{http://blog.aylien.com/overview-word-embeddings-history-word2vec-cbow-glove/}
-		(dostęp 18.08.2017)
-		
-		\bibitem{c_w}
-		R. Collobert, J. Weston,
-		\emph{A Unified Architecture for Natural Language Processing: Deep Neural Networks with Multitask Learning},
-		NEC Labs America,
-		2008
-		
-		\bibitem{engines}
-		W. B. Croft, D. Metzler, T. Strohman,
-		\emph{Search Engines. Information Retrieval in Practice},
-		Pearson Education, Inc.,
-		6-9,
-		2015
 		
 		\bibitem{lsa}
 		S. Deerwester, S. T. Dumais, G. W. Furnas, T. K. Landauer, R. Harshman,
@@ -318,70 +229,17 @@
 		Journal of the American Society for Information Science, tom 41, num. 6,
 		1990
 		
-		\bibitem{elastic}
-		Elasticsearch
-		\url{https://www.elastic.co/}
-		(dostęp 18.08.2017)
-		
-		\bibitem{elastic_companies}
-		Firmy korzystające z Elasticsearch
-		\url{https://www.elastic.co/use-cases}
-		(dostęp 10.08.17)
-		
-		\bibitem{firth}
-		J.R. Firth,
-		\emph{A synopsis of linguistic theory 1930-1955},
-		Oxford: Philological Society,
-		1957
-		
-		\bibitem{svd}
-		G. H. Golub, W. Kahan,
-		\emph{Calculating the singular values and pseudo-inverse of a matrix},
-		Journal of the Society for Industrial and Applied Mathematics: Series B, Numerical Analysis. 2 (2),
-		1965
-		
-		\bibitem{bow}
-		Z. S. Harris,
-		\emph{Distributional Structure},
-		Word,
-		10 (2/3): 146–62,
-		1954
-		
-		\bibitem{google_word2vec}
-		Informacje o Word2vec
-		\url{https://code.google.com/archive/p/word2vec/}
-		(dostęp 26.05.2017)
-		
-		\bibitem{ndcg}
-		K. Jarvelin, J. Kekalainen,
-		\emph{Cumulated gain-based evaluation of IR techniques},
-		University of Tampere,
-		2002
-		
 		\bibitem{fasttext}
 		A. Joulin, E. Grave, P. Bojanowski T. Mikolov,
 		\emph{Bag of Tricks for Efficient Text Classification},
 		Facebook AI Research,
 		2016
 		
-		\bibitem{pias}
-		P. Kędzia, G. Czachor, M. Piasecki, J. Kocoń
-		\emph{Vector representations of polish words (Word2Vec method)},
-		Wrocław University of Technology,
-		2016,
-		\url{https://clarin-pl.eu/dspace/handle/11321/327}
-		(dostęp 26.06.2017)
-		
 		\bibitem{wmd}
 		M. J. Kusner, Y. Sun, N. I. Kolkin, K. Q. Weinberger,
 		\emph{From Word Embeddings To Document Distances},
 		International Conference on Machine Learning (ICML),
 		2015
-		
-		\bibitem{lucene}
-		Lucene
-		\url{https://lucene.apache.org/}
-		(dostęp 18.08.2017)
 		
 		\bibitem{word2vec}
 		T. Mikolov, K. Chen, G. Corrado, J. Dean,
@@ -394,87 +252,12 @@
 		\url{http://morfologik.blogspot.com/}
 		(dostęp 07.05.2017)
 		
-		\bibitem{glove_cran}
-		Opis GloVe
-		\url{https://cran.r-project.org/web/packages/text2vec/vignettes/glove.html}
-		(dostęp 30.08.2017)
-		
-		\bibitem{word2vec_tutorial}
-		Opis Word2vec
-		\url{http://mccormickml.com/2016/04/19/word2vec-tutorial-the-skip-gram-model/}
-		(dostęp 26.05.2017)
-		
-		\bibitem{emd_method}
-		O. Pele, M. Werman,
-		\emph{Fast and robust earth mover's distances},
-		ICCV,
-		2009
-		
 		\bibitem{glove}
 		J. Pennington, R. Socher, C. D. Manning,
 		\emph{GloVe: Global Vectors for Word Representation},
 		Computer Science Department, Stanford University, Stanford, CA 94305,
 		2014
-		
-		\bibitem{all_naj}
-		Porównanie największych polskich serwisów aukcyjnych
-		\url{http://gadzetomania.pl/11824,zakupy-w-sieci-porownanie-najwiekszych-polskich-serwisow-aukcyjnych-2}
-		(dostęp 09.08.17)
-		
-		\bibitem{handbook}
-		F. Ricci, L. Rokach, B. Shapira,
-		\emph{Introduction to Recommender Systems Handbook},
-		Springer,
-		1-4,
-		2011
-		
-		\bibitem{handbook_col}
-		F. Ricci, L. Rokach, B. Shapira,
-		\emph{Introduction to Recommender Systems Handbook},
-		Springer,
-		145-147,
-		2011
-		
-		\bibitem{handbook_cb}
-		F. Ricci, L. Rokach, B. Shapira,
-		\emph{Introduction to Recommender Systems Handbook},
-		Springer,
-		73-75,
-		2011
-		
-		\bibitem{emd}
-		Y. Rubner, C. Tomasi, L. J. Guibas,
-		\emph{The Earth Mover's Distance as a Metric for Image Retrieval},
-		Computer Science Department, Stanford University,
-		1,
-		2000	
-		
-		\bibitem{tf_idf}
-		G. Salton and M. McGill,
-		\emph{Introduction to modern information retrieval},
-		McGraw-Hill,
-		1983
-		
-		\bibitem{stopwords}
-		Słowa stopu w Wikipedii
-		\url{https://pl.wikipedia.org/wiki/Wikipedia:Stopwords}
-		(dostęp 15.04.2017)
-		
-		\bibitem{slownik}
-		Słownik Języka Polskiego PWN
-		\url{http://sjp.pwn.pl/sjp/artykul;2441396.html}
-		(dostęp 07.05.2017)
-		
-		\bibitem{screen_allegro}
-		Strona Allegro z artykułem
-		\url{https://allegro.pl/artykul/jaka-farba-dla-alergika-55917/}
-		(dostęp 26.06.2017)
-		
-		\bibitem{wordnet}
-		Wordnet
-		\url{http://plwordnet.pwr.wroc.pl/wordnet/}
-		(dostęp 28.06.2017)
-		
+
 		
 	\end{thebibliography}
 	
