@@ -69,7 +69,7 @@
 			%TODO Pierwsze zdanie: zagajenie, że systemy reko są ważne
 		%TODO Dalej: In this paper..
 		
-		Recommendation systems play an important role in modern e-commerce services. The more relevant items are presented to the user, the more likely s/he is to stay on a website and eventually make a transaction. In this paper, we adapt some state-of-the-art methods for determining similarities between text documents to content-based recommendations problem. The aim is to investigate a possibility of improving the existing recommendation system being a part of Allegro e-commerce platform using semantic text analysis methods. As a conclusion we show, that there is no significant difference between examined methods and previously used elasticsearch-based query in content-based recommendation task. 
+		Recommendation systems play an important role in modern e-commerce services. The more relevant items are presented to the user, the more likely s/he is to stay on a website and eventually make a transaction. In this paper, we adapt some state-of-the-art methods for determining similarities between text documents to content-based recommendations problem. The goal is to investigate a possibility of improving an existing recommendation system being a part of Allegro e-commerce platform using semantic text analysis methods. As a conclusion we show, that there is no significant difference between examined methods and previously used elasticsearch-based query in content-based recommendation task. 
 		
 	\end{abstract}
 	{\bf Keywords:} recommendations, natural language processing, word embedding, semantics, allegro
@@ -79,36 +79,25 @@
 %----------------------------------------------------------------------------------------
 
 \begin{document}
-	
-	% Print the title
 	\maketitle
 	%INTRODUCTION---------------------------------------------------------------------------------------------------------------------------------------
 	\section{Introduction}
-
-	%TODO napisać, że to ważne
-	
-	%TODO rozwiązaniem są systemy rekomendacji
-	
-	%TODO dzielą się na dwa typy
 	
 	% Po kolei wymienić metody: LSA, LDA, bengio, collobert, word2vec itp...
 	%Zagajenie
-	Recommendation systems are commonly used in e-commerce services. Such a system gives profit to both the user, allowing him to get to the information he is
-	he could not find, or know, that such information exists, as well as the owner website, which depends on attracting users to you they used his services to the greatest extent. 	The key issue of recommendations generation is how suggested items are relevant to these which the user is interested in. 
+	Recommendation systems are commonly used in e-commerce services. Such system give profit to both a user as well as a website owner. They allow the user to get to an information s/he could not find, or even know, that such information exists. They also attract users to a service making them more likely to buy something, increasing website company's profit thereby. The key issue of recommendations generation is how suggested items are relevant to these which the user is interested in. 
 	
 	%Lekkie wprowadzenie do rekomendacji
-	We can divide recommendation systems into two groups: collaborative and content-based filtering. The first one assumes that user is likely to be interested in items which also users similar to s/he were interested in. In this paper we are focusing on the second group in which recommended items are similar to these that the user liked so far.
+	Generally we can divide recommendation systems into two groups: collaborative and content-based filtering. The first one assumes that user is likely to be interested in items which also users similar to s/he were interested in. In this paper we are focusing on the second group in which recommended items are similar to these that the user liked so far.
 	
 	%O Allegro
-	A detailed problem comes from the on-line auction site Allegro. Allegro --- the biggest marketplace platform in Eastern Europe --- contains a section presenting text articles concerning products available via the platform. Currently there is a list of links to articles similar to given one. Using elasticsearch
+	A detailed problem comes from the on-line auction site Allegro. Allegro --- the biggest marketplace platform in Eastern Europe --- contains a section presenting text articles concerning products available via the platform. Next to article currently displayed by a user, there is a list of links to articles similar to given one. Previous recommendations determining mechanism is based on elasticsearch query and uses both an article text and some metadata attached to the article.
 	
 	%Synteza: co będziemy robić z rekomendacjami w Allegro
-	The subject of this paper focuses on issues of determining a semantic similarity between text
-	documents and recommendations of similar documents. In this paper we strive to check if newly proposed word embeddings methods are able to replace recently used method based on Elasticsearch query.%TODO wymienić metody???
-	
+	In this paper we strive to check if some semantic text analysis methods, including newly proposed word embeddings, are able to replace previously used Allegro method. Examined methods are topic modeling methods: latent semantic analysis~\cite{lsa}, latent Dirichlet allocation~\cite{lda} and word embeddings methods: word2vec~\cite{word2vec}, fastText~\cite{fasttext} and GloVe~\cite{glove}.
 	
 	%Plan artykułu
-	In the following sections we describe topics in detail...
+	In section 2 we make an analysis of the articles dataset and also we describe data preprocessing we performed. Section 3 is about methods used for building the model and next evaluate results. In section 4 we present the results and try to interpret them. The last section concludes the papers and proposes a direction of future work.
 	%DATASET------------------------------------------------------------------------------------------------------------------------------------
 	\section{Dataset}
 	%TODO Skąd pochodzi zbiór danych
@@ -200,7 +189,7 @@
 	
 	To answer the question posed at the beginning of this work, i.e. whether the examined text analysis methods adapted to content-based recommendation task are able to match current method used in Allegro, we perform a test that's goal is to check whether there are grounds to believe that the results of any of the methods is statistically significantly different from the rest of the examined methods.
 		
-	The statistical test that we carry out is the Kruskal-Wallis test. The null hypothesis $H_0$ assumes the equality of distributions in the populations from which the samples originated.
+	The statistical test that we carry out is the Kruskal-Wallis test. In the test the null hypothesis $H_0$ assumes an equality of distributions in populations from which samples originated.
 	%do poprawienia---------------------------------------
 	In earlier tests, users assessed the similarity between the article and everyone from articles recommended for it, determined by evaluated methods.
 	
