@@ -108,29 +108,22 @@
 	
 	All articles are written in Polish. The vocabulary based on the articles set contains many industry-specific words like brands and models names, books titles and technical words. Moreover raw articles contain some tags responsible for images and hyperlinks present on the website.
 	
-	A standard activity before building a model is preprocessing of a row dataset. The following enumeration describes steps of the preprocessing that we performed.
-	collection of articles.
+	A standard activity before building a model is preprocessing of a raw dataset. The following enumeration describes steps of the preprocessing that we performed.
 	\begin{enumerate}
 		
-		\item Cleansing the text from the redundant, previously mentioned tags. From the viewpoint of semantic analysis they are useless or even noxious. So I remove them using properly constructed ones
-		regular expressions. An example of such a tag is \texttt{[2\_new.jpg] (http: // (...)'2\_new.jpg')} placing the picture in the middle of the text (the content of the URL removed due to confidentiality reasons).
+		\item Cleansing the text from the redundant, previously mentioned tags. From the viewpoint of semantic analysis they are useless or even noxious. That is why we remove them using properly constructed regular expressions. An example of such a tag is \texttt{[2\_new.jpg] (http: // (...)'2\_new.jpg')} placing the picture in the middle of the text (the content of the URL removed due to confidentiality reasons).
 		
-		\item Removal of stopwords - usually short words carrying very little information about the actual document contents, e.g. ,,in'', ,,from'', ,,because'' etc. Removing them reduces the number of words in a document and the processing time therein. Full list of stopwords comes from [31].
+		\item Removal of stopwords --- usually short words carrying very little information about the actual document contents, e.g. ,,in'', ,,from'', ,,because'' etc. Removing them reduces the number of words in a document and the processing time thereby.
 		
-		\item Converting all the words of the document to lowercase letters. It helps to unify words with the same meaning, but written using both uppercase and lowercase letters.
+		\item Converting all words of a document to lowercase letters. It helps to unify words with the same meaning, but written using both uppercase and lowercase letters.
 		
-		\item Breaking down the words connected with the hyphen. Experience at a later lemmatisation stage shows that the tool used to it (Morfologik [20]) does not cope with these types of words and leaves them in the unchanged grammatical form. This made it necessary to build our own tool that breaks such words into sub-words compatible with the lemmatiser.
+		\item Breaking down the words connected with a hyphen. Experience at a later lemmatisation stage shows that the tool used to it (Morfologik~\cite{morfologik}) does not cope with these types of words and leaves them in the unchanged grammatical form. This made it necessary to build our own tool that breaks such words into sub-words compatible with the lemmatiser.
 		
-		\item Tokenization and lemmatisation. This is the most important element of the process. It's about separating text into individual words and converting the words with the same meaning, and different grammatical form to the same form. Complexity of the Polish language and the number of exceptions that this language has are making this problem harder than in many other languages. To carry out this operation, we used the Morfologik tool [20].
+		\item Tokenization and lemmatisation. This is the most important element of the process. It's about separating text into individual words and converting the words with the same meaning, and different grammatical form to the same form. Complexity of the Polish language and the number of exceptions that this language has are making this problem harder than in many other languages. To carry out this operation, we used the Morfologik tool~\cite{morfologik}.
 	
 	\end{enumerate}
 	
-	The above steps lead the data to a state in which you can apply semantic techniques
-	text analysis. The dictionary built on the pre-processed body contains 98174 unique
-	words, and 7409145 all words (with repetitions).
-	
-	the overwhelming majority of the words of the dictionary built on the body are the words appearing
-	rarely.
+	The above steps lead the data to a state in which we can apply examined semantic techniques of text analysis. The dictionary built on the preprocessed corpus contains 98174 unique	words and 7409145 all words (with repetitions).	The overwhelming majority of the words of the dictionary built on the body are the words appearing rarely.
 	%METHODS-------------------------------------------------------------------------------------------------------------------------------------
 	\section{Methods}
 
@@ -150,6 +143,8 @@
 		\item FastText
 	\end{enumerate}
 	
+	Hyperparameters of the methods...
+	
 	Word2Vec authors offer pretrained model but only for English language. For Polish it's more difficult...
 	Lack of presumably important words like brand and model names etc.  
 	
@@ -161,8 +156,7 @@
 	
 	\subsection{Evaluation}
 	
-	In order to compare the methods used to determine the similarity between the articles necessary
-	there is the formalization of certain measures of this similarity.
+	In order to compare the methods used to determine the similarity between the articles, the formalization of certain measures of this similarity seems necessary.
 	
 	
 	In practice, however, it is rarely worth the value of a given element of the ranking
@@ -175,8 +169,7 @@
 	%RESULTS & DISCUSSION-----------------------------------------------------------------------------------------------------------------------------------------------------------
 	\section{Results and discussion}
 	In order to compare aforementioned methods we performed described expert evaluation. The evaluated methods were: LSA, LDA, word2vec, GloVe, FastText, previous Allegro elasticsearch-based method and randomly chosen pairs of articles.
-	
-	Hyperparameters of the methods...
+
 
 	\begin{figure}
 		\centering
@@ -187,15 +180,14 @@
 	
 	Expert evaluation suggests that none of the tested methods is significantly different from others. The difference between the best method (FastText) and the worst one (LDA) is around 9\%. Each of the tested methods also gave a significantly better result than the random method.
 	
-	To answer the question posed at the beginning of this work, i.e. whether the examined text analysis methods adapted to content-based recommendation task are able to match current method used in Allegro, we perform a test that's goal is to check whether there are grounds to believe that the results of any of the methods is statistically significantly different from the rest of the examined methods.
-		
-	The statistical test that we carry out is the Kruskal-Wallis test. In the test the null hypothesis $H_0$ assumes an equality of distributions in populations from which samples originated.
-	%do poprawienia---------------------------------------
-	In earlier tests, users assessed the similarity between the article and everyone from articles recommended for it, determined by evaluated methods.
 	
-	For data Kruskal-Wallis test entry accepts tests corresponding to test results for each from methods (except for the random method) submitted from the average assessment of users for the most relevant recommendations for each of the tested base articles.
-	%-----------------------------------------------------
-	In the test, the level of significance is $\alpha = 0.05$. Finally, as the result of the Kruskal-Wallis test we received $p = 0.0571>\alpha$, on the basis of which we state that there are no reasons to	reject the null hypothesis --- the difference between the quality of the recommendations of the tested methods is not statistically significant. It means that neither of the tested semantic methods does not stick out from others, nor the previous Allegro method is significantly better/worse than other tested methods.
+	To answer the question posed at the beginning of this work, i.e. whether the examined text analysis methods adapted to content-based recommendation task are able to match the previous method used in Allegro, we perform a test that's goal is to check whether there are grounds to believe that the results of any of the methods is statistically significantly different from the rest of the examined methods.
+		
+		
+	The statistical test that we carry out is the Kruskal-Wallis test. In the test the null hypothesis $H_0$ assumes an equality of distributions in populations from which samples originated.	As input data the Kruskal-Wallis test takes samples corresponding to expert evaluation of each method consisting of an average score made by users for the most relevant recommendation for each of the examined base articles.
+
+
+	In the test, the level of significance is $\alpha = 0.05$. Finally, as the result of the Kruskal-Wallis test we received $p = 0.0571>\alpha$, on the basis of which we state that there are no reasons to reject the null hypothesis --- the quality difference between of recommendations generated by the tested methods is not statistically significant. It means that neither of the tested semantic methods sticks out from others, nor the previous Allegro method is significantly better/worse than other tested methods.
 	
 	%CONCLUSION--------------------------------------------------------------------------------------------------------------------------------------------------------------------
 	\section{Conclusion}
