@@ -32,7 +32,7 @@
 \pagestyle{fancy} % All pages have headers and footers
 \fancyhead{} % Blank out the default header
 \fancyfoot{} % Blank out the default footer
-\fancyhead[C]{Running title $\bullet$ May 2016 $\bullet$ Vol. XXI, No. 1} % Custom header text
+\fancyhead[C]{Content-based recommendations in~e-commerce service $\bullet$ February 2018} % Custom header text
 \fancyfoot[RO,LE]{\thepage} % Custom footer text
 
 \usepackage{titling} % Customizing the title section
@@ -50,14 +50,14 @@
 
 \pretitle{\begin{center}\Huge\bfseries} % Article title formatting
 	\posttitle{\end{center}} % Article title closing formatting
-\title{Content-based recommendations in~e-commerce services} % Article title
+\title{Content-based recommendations in~e-commerce service} % Article title
 \author{%
-	\textsc{John Smith}\thanks{A thank you or further information} \\[1ex] % Your name
+	\textsc{AUTHOR}\\[1ex]%\thanks{A thank you or further information} \\[1ex] % Your name
 	\normalsize Warsaw University of Technology \\ % Your institution
 	\normalsize Faculty of Mathematics and Information Science \\
 	\normalsize ul. Koszykowa 75 \\
 	\normalsize 00-662 Warsaw, Poland \\
-	\normalsize \href{mailto:john@smith.com}{john@smith.com} % Your email address
+	\normalsize \href{mailto:mail}{mail} % Your email address
 	%\and % Uncomment if 2 authors are required, duplicate these 4 lines if more
 	%\textsc{Jane Smith}\thanks{Corresponding author} \\[1ex] % Second author's name
 	%\normalsize University of Utah \\ % Second author's institution
@@ -66,8 +66,6 @@
 \date{\today} % Leave empty to omit a date
 \renewcommand{\maketitlehookd}{%
 	\begin{abstract}
-			%TODO Pierwsze zdanie: zagajenie, że systemy reko są ważne
-		%TODO Dalej: In this paper..
 		
 		Recommendation systems play an important role in modern e-commerce services. The more relevant items are presented to the user, the more likely s/he is to stay on a website and eventually make a transaction. In this paper, we adapt some state-of-the-art methods for determining similarities between text documents to content-based recommendations problem. The goal is to investigate a possibility of improving an existing recommendation system being a part of Allegro e-commerce platform using semantic text analysis methods. As a conclusion we show, that there is no significant difference between examined methods and previously used elasticsearch-based query in content-based recommendation task. 
 		
@@ -126,55 +124,45 @@
 	The above steps lead the data to a state in which we can apply examined semantic techniques of text analysis. The dictionary built on the preprocessed corpus contains 98174 unique	words and 7409145 all words (with repetitions).	The overwhelming majority of the words of the dictionary built on the body are the words appearing rarely.
 	%METHODS-------------------------------------------------------------------------------------------------------------------------------------
 	\section{Methods}
-
-	Emerging popularity of word embeddings methods started 
-	
-	Next we had to choose an evaluation method....
+	%zagajenie------------------------------------------------------
+	Sudden increase of popularity of word embeddings methods started with introducing word2vec by Mikolov et al. in 2013\cite{word2vec}. This method converts words to vectors using a shallow neural network. Word2vec outperforms earlier approaches in terms of time complexity.
 
 	\subsection{Model building}
 	
-	Below enumeration contains text analysis methods we decided to adapt for our content-based recommendations task.
+	Hyperparameters of examined methods were chosen based on preliminary automatic evaluation. For this purpose we took advantage of articles' metadata --- the more common categories/keywords two articles have, the more similar they are. Hyperparameters values, with which a method achieved the best score were for further evaluation described in next subsection.
 	
+	Below enumeration contains text analysis methods we decided to adapt for our content-based recommendations task.
+	%metody i wartosci hiperparametrów
 	\begin{enumerate}
-		\item Latent semantic analysis
-		\item Latent Dirichlet allocation
-		\item Word2Vec %We decided to train word embedding models on our dataset.
-		\item GloVe
-		\item FastText
+		\item Latent semantic indexing~\cite{lsa} with 500 topics, labeled (\emph{lsi500})
+		\item Latent Dirichlet allocation~\cite{lda} with 900 topics, labeled (\emph{lda900})
+		\item Word2Vec~\cite{word2vec} with 300 length vectors, (labeled \emph{w2v300})  %We decided to train word embedding models on our dataset.
+			Word2Vec authors offer a pretrained model but only for English language. There exist pretrained models for Polish language (\cite{pias}). However due to possible lack of presumably important words like brand and model names etc. we decided to train a model independently using our entire articles corpus. Following methods: FastText and GloVe were examined with similar preparation.
+			%Wzmianka o usrednianiu wektorów word embeddings i wmd
+		\item FastText~\cite{fasttext} with 1000 length vectors, (labeled \emph{ft1000})
+		\item GloVe~\cite{glove} with 1000 length vectors, (labeled \emph{gv1000})
 	\end{enumerate}
 	
-	Hyperparameters of the methods...
 	
-	Word2Vec authors offer pretrained model but only for English language. For Polish it's more difficult...
-	Lack of presumably important words like brand and model names etc.  
-	
-	
-	%Wzmianka o usrednianiu wektorów word embeddings
-	
-	
-	Text requiring further explanation\footnote{Example footnote}.
+	%Text requiring further explanation\footnote{Example footnote}.
 	
 	\subsection{Evaluation}
 	
-	In order to compare the methods used to determine the similarity between the articles, the formalization of certain measures of this similarity seems necessary.
+	In order to compare the results of the methods used to determine a similarity between articles, a formalization of certain measures of this similarity was necessary. Evaluation of recommendations generation methods is a nontrivial task. A degree of similarity of two articles can be perceived differently by different persons. Therefore we decided to evaluate methods' performance with help of real users, whose task was to asses similarity between articles pairs.
 	
-	
-	In practice, however, it is rarely worth the value of a given element of the ranking
-	is adequate to the query generating this ranking.
-	
-	Evaluation of recommendations generation methods is a nontrivial task. A degree of similarity of two articles can be perceived differently by different persons. Therefore we decided to evaluate methods' performance with .... First with each tested method we choose 6 most similar articles for 50 randomly chosen base articles. Next we split them into pairs: base article --- similar article; it gave us $5*50=250$ pairs for a method. After that 5 persons individually evaluated a similarity of pairs of articles giving scores in scale 1-10. Finally we took an average score for each pair and it allowed us to calculate an average score for each method. Besides tested methods we evaluated also previous Allegro method and randomly generated pairs of articles just for a comparison purpose.
+	First with each tested method we choose 5 most similar articles for 50 randomly chosen base articles. Next we split them into pairs: base article --- similar article; it gave us $5*50=250$ pairs for a method. After that 5 persons individually evaluated a similarity of pairs of articles giving scores in scale 1-10. Finally we took an average score for each pair and it allowed us to calculate an average score for each method. Besides tested methods we evaluated also previous Allegro method and randomly generated pairs of articles just for a comparison purpose.
 	
 	
 	
 	%RESULTS & DISCUSSION-----------------------------------------------------------------------------------------------------------------------------------------------------------
 	\section{Results and discussion}
-	In order to compare aforementioned methods we performed described expert evaluation. The evaluated methods were: LSA, LDA, word2vec, GloVe, FastText, previous Allegro elasticsearch-based method and randomly chosen pairs of articles.
+	In order to compare aforementioned methods we performed described expert evaluation. The evaluated methods were: LSI, LDA, word2vec, GloVe, FastText, previous Allegro elasticsearch-based method and randomly chosen pairs of articles.
 
 
 	\begin{figure}
 		\centering
 		\includegraphics[width=0.45\textwidth]{results.png}
-		\caption{}
+		\caption{Comparison of expert-evaluated methods results.}
 		%\label{fig:warstwy}
 	\end{figure}
 	
@@ -231,7 +219,6 @@
 		\bibitem{morfologik}
 		Morfologik
 		\url{http://morfologik.blogspot.com/}
-		(dostęp 07.05.2017)
 		
 		\bibitem{glove}
 		J. Pennington, R. Socher, C. D. Manning,
@@ -239,7 +226,12 @@
 		Computer Science Department, Stanford University, Stanford, CA 94305,
 		2014
 
-		
+		\bibitem{pias}
+		P. Kędzia, G. Czachor, M. Piasecki, J. Kocoń
+		\emph{Vector representations of polish words (Word2Vec method)},
+		Wrocław University of Technology,
+		2016,
+		\url{https://clarin-pl.eu/dspace/handle/11321/327}
 	\end{thebibliography}
 	
 	%----------------------------------------------------------------------------------------
