@@ -83,7 +83,7 @@
 	
 	% Po kolei wymienić metody: LSA, LDA, bengio, collobert, word2vec itp...
 	%Zagajenie
-	Recommendation systems are commonly used in e-commerce services. Such system give profit to both a user as well as a website owner. They allow the user to get to an information s/he could not find, or even know, that such information exists. They also attract users to a service making them more likely to buy something, increasing website company's profit thereby. The key issue of recommendations generation is how suggested items are relevant to these which the user is interested in. 
+	Recommendation systems are commonly used in e-commerce services. Such system give profit to both a user as well as a website owner. It allows the user to get to an information s/he could not find, or even know, that such information exists. They also attract users to a service making them more likely to buy something, increasing website company's profit thereby. The key issue of recommendations generation is how suggested items are relevant to these which the user is interested in. 
 	
 	%Lekkie wprowadzenie do rekomendacji
 	Generally we can divide recommendation systems into two groups: collaborative and content-based filtering. The first one assumes that user is likely to be interested in items which also users similar to s/he were interested in. In this paper we are focusing on the second group in which recommended items are similar to these that the user liked so far.
@@ -95,7 +95,7 @@
 	In this paper we strive to check if some semantic text analysis methods, including newly proposed word embeddings, are able to replace previously used Allegro method. Examined methods are topic modeling methods: latent semantic analysis~\cite{lsa}, latent Dirichlet allocation~\cite{lda} and word embeddings methods: word2vec~\cite{word2vec}, fastText~\cite{fasttext} and GloVe~\cite{glove}.
 	
 	%Plan artykułu
-	In section 2 we make an analysis of the articles dataset and also we describe data preprocessing we performed. Section 3 is about methods used for building the model and next evaluate results. In section 4 we present the results and try to interpret them. The last section concludes the papers and proposes a direction of future work.
+	In section 2 we make an analysis of the articles dataset and also we describe data preprocessing we performed. Section 3 is about methods used for building the model and next evaluate results. In section 4 we present the results and try to interpret them. The last section concludes the paper and proposes a direction of future work.
 	%DATASET------------------------------------------------------------------------------------------------------------------------------------
 	\section{Dataset}
 	%TODO Skąd pochodzi zbiór danych
@@ -115,7 +115,7 @@
 		
 		\item Converting all words of a document to lowercase letters. It helps to unify words with the same meaning, but written using both uppercase and lowercase letters.
 		
-		\item Breaking down the words connected with a hyphen. Experience at a later lemmatisation stage shows that the tool used to it (Morfologik~\cite{morfologik}) does not cope with these types of words and leaves them in the unchanged grammatical form. This made it necessary to build our own tool that breaks such words into sub-words compatible with the lemmatiser.
+		\item Breaking down the words connected with a hyphen. Experience at a later lemmatisation stage shows that the tool used for this purpose (Morfologik~\cite{morfologik}) does not cope with these types of words and leaves them in the unchanged grammatical form. This made it necessary to build our own tool that breaks such words into sub-words compatible with the lemmatiser.
 		
 		\item Tokenization and lemmatisation. This is the most important element of the process. It's about separating text into individual words and converting the words with the same meaning, and different grammatical form to the same form. Complexity of the Polish language and the number of exceptions that this language has are making this problem harder than in many other languages. To carry out this operation, we used the Morfologik tool~\cite{morfologik}.
 	
@@ -129,7 +129,7 @@
 
 	\subsection{Model building}
 	
-	Hyperparameters of examined methods were chosen based on preliminary automatic evaluation. For this purpose we took advantage of articles' metadata --- the more common categories/keywords two articles have, the more similar they are. Hyperparameters values, with which a method achieved the best score were for further evaluation described in next subsection.
+	Hyperparameters of examined methods were chosen based on preliminary automatic evaluation. For this purpose we took advantage of articles' metadata --- we assumed that the more common categories/keywords two articles had, the more similar they were. Hyperparameters values, with which a method achieved the best score were for further evaluation described in next subsection.
 	
 	Below enumeration contains text analysis methods we decided to adapt for our content-based recommendations task.
 	%metody i wartosci hiperparametrów
@@ -143,6 +143,7 @@
 		\item GloVe~\cite{glove} with 1000 length vectors, (labeled \emph{gv1000})
 	\end{enumerate}
 	
+	Word embeddings methods only converts words to vectors. In order to compare whole documents we needed to represent documents as vectors. For this purpose we examined two approaches. First one was a simple calculation of an average of vectors being representation of words included in an article. The second one was Word Mover's Distance\cite{wmd}. Unfortunately WMD turned out to be too slow to be used in production system.
 	
 	%Text requiring further explanation\footnote{Example footnote}.
 	
